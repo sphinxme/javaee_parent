@@ -25,8 +25,8 @@ import reactor.core.publisher.Mono;
  * @author lucky us
  */
 @Component
-public class AccessFilter implements GlobalFilter, Ordered {
-
+public class AccessFilter implements GlobalFilter, Ordered
+{
 
     final RedisTemplate redisTemplate;
 

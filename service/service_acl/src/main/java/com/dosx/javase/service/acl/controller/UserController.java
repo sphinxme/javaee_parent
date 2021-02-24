@@ -37,10 +37,17 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public UniResponse login(@RequestBody User user)
+    public UniResponse login(@RequestBody User user) throws Exception
     {
         // 先取出user的账密 取不出来抛异常
+        String username = user.getUsername();
+        String password = user.getPwd();
+        if ( password == null || username == null)
+        {
+            throw new Exception("用户名有问题");
+        }
         // 然后用username 取出数据库那边的user
+
         // 加密pwd 然后和数据库里取出来的做对比
         // 如果取不出来抛异常
         // 如果不一样抛异常
