@@ -1,6 +1,6 @@
 package com.dosx.javase.service.acl;
 
-import com.dosx.javase.service.acl.utils.TokenUtil;
+import com.dosx.javase.common.utils.TokenUtil;
 
 import org.apache.commons.codec.DecoderException;
 import org.junit.jupiter.api.Test;

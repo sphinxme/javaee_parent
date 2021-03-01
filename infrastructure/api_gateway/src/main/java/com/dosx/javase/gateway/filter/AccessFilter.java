@@ -1,6 +1,7 @@
 package com.dosx.javase.gateway.filter;
 
 import com.dosx.javase.common.utils.UniResponse;
+import com.dosx.javase.gateway.service.TokenService;
 import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import java.nio.charset.StandardCharsets;
-
-
 import reactor.core.publisher.Mono;
 
 /**
@@ -28,12 +26,11 @@ import reactor.core.publisher.Mono;
 public class AccessFilter implements GlobalFilter, Ordered
 {
 
-    final RedisTemplate redisTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Autowired
-    public AccessFilter(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
+    TokenService tokenService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
@@ -44,17 +41,30 @@ public class AccessFilter implements GlobalFilter, Ordered
         // 验证token
         if(null == token)
         {
-            ServerHttpResponse response = exchange.getResponse();
-            response.setStatusCode(HttpStatus.FORBIDDEN);
-            Gson gson = new Gson();
-            String message = gson.toJson(UniResponse.error());
-            DataBuffer buffer = response.bufferFactory().wrap(message.getBytes());
-            return response.writeWith(Mono.just(buffer));
+            return cutOnErrorWith(exchange, "无访问令牌, 请登录");
         }
 
+        boolean tokenValid = false;
+        try {
+            tokenValid = tokenService.ifTokenValid(token);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
+        if (!tokenValid) {
+            return cutOnErrorWith(exchange, "无效令牌, 请登录重试");
+        }
 
         return chain.filter(exchange);
+    }
+
+    private Mono<Void> cutOnErrorWith(ServerWebExchange exchange, String errorMessage) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.FORBIDDEN);
+        Gson gson = new Gson();
+        String message = gson.toJson(UniResponse.error().message(errorMessage));
+        DataBuffer buffer = response.bufferFactory().wrap(message.getBytes());
+        return response.writeWith(Mono.just(buffer));
     }
 
     @Override

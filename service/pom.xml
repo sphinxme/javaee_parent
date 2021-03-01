@@ -14,6 +14,7 @@
     <modules>
         <module>service_workflow</module>
         <module>service_acl</module>
+        <module>service_hr</module>
     </modules>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package com.dosx.javase.service.acl.utils;
+package com.dosx.javase.common.utils;
 
 
 import org.apache.commons.codec.DecoderException;

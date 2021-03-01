@@ -5,7 +5,7 @@ import com.dosx.javase.common.utils.UniResponse;
 import com.dosx.javase.service.acl.entity.User;
 import com.dosx.javase.service.acl.service.UserService;
 import com.dosx.javase.service.acl.utils.PasswordUtil;
-import com.dosx.javase.service.acl.utils.TokenUtil;
+import com.dosx.javase.common.utils.TokenUtil;
 
 import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +84,13 @@ public class UserController {
         String token = tokenUtil.encodeToken(realUser.getId().toString());
         userService.insertTokenToRedis(token, realUser.getId().toString());
         return UniResponse.ok().data("token", token);
+    }
+
+    @ApiOperation("注册新用户")
+    @PostMapping("/signup")
+    public UniResponse signUp(@RequestBody User user) {
+        // todo 注册
+        return UniResponse.ok().message("注册成功");
     }
 
 
