@@ -13,4 +13,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * 通过username寻找user
+     * @param username 用户名
+     * @return User
+     */
+    public User findPasswordByUsername(String username);
+
+    /**
+     * 把Token:user_id 插入redis
+     * @return 成功数量
+     * @param token token
+     * @param userId user_id*/
+    public int insertTokenToRedis(String token, String userId);
 }

@@ -6,13 +6,16 @@ spring:
     username: sphinx
     password: fxxkingC++
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
+  # redis
+  redis:
+    host: 129.211.80.11
+    port: 6379
+    jedis.pool.max-active: 8
+    database: 1
+
+  # nacos
+  cloud.nacos.discovery.server-addr: 127.0.0.1:8848
 
 
 # mybatis日志输出
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus.configuration.log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
