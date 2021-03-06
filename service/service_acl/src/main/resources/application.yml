@@ -28,5 +28,5 @@ spring:
       poolPreparedStatements: true
 
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-M-d H:m:s
     time-zone: GMT+8

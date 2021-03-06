@@ -24,7 +24,7 @@ public class CodeGenerator {
         // 2、全局配置
         GlobalConfig gc = new GlobalConfig();
 //        String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir("C:\\Users\\SphinX\\IdeaProjects\\javase_parent\\service\\service_acl" + "/src/main/java");
+        gc.setOutputDir("C:\\Users\\SphinX\\IdeaProjects\\javase_parent\\service\\service_hr" + "/src/main/java");
         gc.setAuthor("lucky us");
         gc.setOpen(false); //生成后是否打开资源管理器
         gc.setFileOverride(false); //重新生成时文件是否覆盖
@@ -46,7 +46,7 @@ public class CodeGenerator {
 
         // 4、包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName("acl"); //模块名
+        pc.setModuleName("hr"); //模块名
         pc.setParent("com.dosx.javase.service");
         pc.setController("controller");
         pc.setEntity("entity");
@@ -56,7 +56,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("acl_role", "acl_permission", "acl_menu", "user");
+        strategy.setInclude("hr_department", "user");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 
