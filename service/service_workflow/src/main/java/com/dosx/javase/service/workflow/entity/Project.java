@@ -1,11 +1,14 @@
 package com.dosx.javase.service.workflow.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,9 +37,7 @@ public class Project implements Serializable {
         this.name = name;
     }
 
-    public Project() {
-
-    }
+    public Project() { }
 
     @ApiModelProperty(value = "Project ID")
     @TableId(value = "id", type = IdType.AUTO)
@@ -63,6 +64,18 @@ public class Project implements Serializable {
     @ApiModelProperty(value = "逻辑删除")
     @TableLogic
     private Boolean isDeleted;
+
+    @ApiModelProperty(value = "头像图床地址")
+    private String imgPath = "https://s3.ax1x.com/2021/03/11/6YgXU1.jpg";
+
+    @TableField(exist = false)
+    private List<String> tags;
+
+    @TableField(exist = false)
+    private String desc;
+
+    @TableField(exist = false)
+    private MinUser manager;
 
 
 }

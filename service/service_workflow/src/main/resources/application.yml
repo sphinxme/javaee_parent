@@ -1,6 +1,6 @@
 # 服务端口
 server:
-  port: 8001
+  port: 7001
 
 # spring
 spring:
@@ -28,5 +28,5 @@ spring:
       poolPreparedStatements: true
 
   jackson:
-    date-format: yyyy-M-d H:m:s
+    date-format: yyyy-M-d
     time-zone: GMT+8

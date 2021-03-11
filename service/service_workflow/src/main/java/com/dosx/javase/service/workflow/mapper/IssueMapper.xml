@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosx.javase.service.workflow.mapper.IssueMapper">
+
+    
+    <resultMap id="IssueRecursion" type="com.dosx.javase.service.workflow.entity.vo.EntireIssue">
+        <id column="issue_id" property="issueId"/>
+        <result column="project_id" property="projectId"/>
+        <result column="issue_name" property="issueName"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+
+        <collection property="manager"
+                    ofType="com.dosx.javase.service.workflow.entity.MinUser"
+        >
+            <id column="manager_id" property="id"/>
+            <result column="manager_name" property="name"/>
+        </collection>
+
+        <collection
+                property="subIssues"
+                ofType="com.dosx.javase.service.workflow.entity.vo.EntireIssue"
+                select="getEntireIssueRecursion"
+                column="{projectId=project_id, parentId=issue_id}"
+        />
+    </resultMap>
+
+    <resultMap id="MinIssue" type="com.dosx.javase.service.workflow.entity.vo.MinIssue">
+        <id column="issue_id" property="issueId"/>
+        <result column="issue_name" property="issueName"/>
+        <result column="end_time" property="endTime"/>
+        <result column="status" property="status"/>
+
+        <result column="project_id" property="project.id"/>
+        <result column="project_name" property="project.name"/>
+
+    </resultMap>
+
+    <select id="getEntireIssueRecursion" resultMap="IssueRecursion">
+        select
+            i.id as issue_id,
+            i.project_id as project_id,
+            i.name as issue_name,
+            i_desc.description as description,
+            i.start_time as start_time,
+            i.deadline as end_time,
+            i.status as status,
+            u.id as manager_id,
+            u.name as manager_name
+        from
+            workflow_issue as i 
+                join workflow_issue_desc as i_desc on i.id = i_desc.issue_id
+                join workflow_issue_to_user as i2u on i.id = i2u.issue_id
+                join user u on i2u.user_id = u.id
+        where
+            i.project_id = #{projectId} and i.parent_id = #{parentId}
+    </select>
+
+    <select id="getEntireIssuesByProId" resultMap="IssueRecursion">
+        select
+            i.id as issue_id,
+            i.project_id as project_id,
+            i.name as issue_name,
+            i_desc.description as description,
+            i.start_time as start_time,
+            i.deadline as end_time,
+            i.status as status,
+            u.id as manager_id,
+            u.name as manager_name
+        from
+             workflow_issue as i
+                 join workflow_issue_desc as i_desc on i.id = i_desc.issue_id
+                 join workflow_issue_to_user as i2u on i.id = i2u.issue_id
+                 join user u on i2u.user_id = u.id
+        where
+            i.project_id = #{projectId} and i.parent_id is null
+    </select>
+
+    <select id="getEntireIssueByIssueId" resultMap="IssueRecursion">
+        select
+            i.id as issue_id,
+            i.project_id as project_id,
+            i.name as issue_name,
+            i_desc.description as description,
+            i.start_time as start_time,
+            i.deadline as end_time,
+            i.status as status,
+            u.id as manager_id,
+            u.name as manager_name
+        from
+            workflow_issue as i
+                join workflow_issue_desc as i_desc on i.id = i_desc.issue_id
+                join workflow_issue_to_user as i2u on i.id = i2u.issue_id
+                join user u on i2u.user_id = u.id
+        where
+            i.id = #{id}
+    </select>
+
+    <select id="getMinIssuesByProId" resultMap="MinIssue">
+        select
+            i.id as issue_id,
+            i.name as issue_name,
+            i.deadline as end_time,
+            i.status as status,
+            p.id as project_id,
+            p.name as project_name
+        from
+            workflow_issue as i
+            join workflow_project p on p.id = i.project_id
+        where
+            i.project_id=#{projectId} and i.parent_id is null
+    </select>
+
+    <select id="getMinIssuesByUserId" resultMap="MinIssue">
+        select
+            i.id as issue_id,
+            i.name as issue_name,
+            i.deadline as end_time,
+            i.status as status,
+            p.id as project_id,
+            p.name as project_name
+        from
+            workflow_issue as i
+                join workflow_project p on p.id = i.project_id
+                join workflow_issue_to_user i2u on i.id = i2u.issue_id
+        where
+            i2u.user_id = #{userId} and i.status=0
+    </select>
+
+    <select id="getMinIssuesByUserIdAndDate" resultMap="MinIssue">
+        select
+            i.id as issue_id,
+            i.name as issue_name,
+            i.deadline as end_time,
+            i.status as status,
+            p.id as project_id,
+            p.name as project_name
+        from
+            workflow_issue as i
+                join workflow_project p on p.id = i.project_id
+                join workflow_issue_to_user i2u on i.id = i2u.issue_id
+        where
+            i2u.user_id = #{userId} and
+            i.status=0 and
+            to_days(i.deadline) = to_days(#{date})
+    </select>
+
+    <insert id="insertIssueDesc" >
+        insert into workflow_issue_desc (issue_id, description)
+        values (#{id}, #{description})
+    </insert>
+
+    <insert id="insertIssueManagers">
+        <foreach collection="manager" item="item" index="index" separator=";">
+            INSERT INTO workflow_issue_to_user(issue_id, user_id)
+            VALUES (#{id}, #{item.id})
+        </foreach>
+    </insert>
+</mapper>

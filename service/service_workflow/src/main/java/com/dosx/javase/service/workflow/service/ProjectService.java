@@ -2,8 +2,10 @@ package com.dosx.javase.service.workflow.service;
 
 import com.dosx.javase.service.workflow.entity.Project;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dosx.javase.service.workflow.entity.vo.EntireProject;
+import com.dosx.javase.service.workflow.entity.vo.MinProject;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 /**
  * <p>
@@ -15,5 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 public interface ProjectService extends IService<Project> {
+
+
+    void saveProjectDesc(EntireProject project);
+
+
+    EntireProject getEntirePro(Long id);
+
+
+    List<MinProject> getAllMinProjects();
+
+
+    List<MinProject> getAllMinProjectsByUserId(Long id);
+
+    List<MinProject> getAllMinProjectsByUserIdByTag(Long id, String tag);
+
+
+    void saveProjectUser(Long projectId, Long userId);
 
 }

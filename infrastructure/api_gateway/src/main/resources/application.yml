@@ -18,3 +18,8 @@ spring:
           uri: lb://service-workflow
           predicates:
             - Path=/workflow/**
+        - id: service-cos
+          uri: lb://service-cos
+          predicates:
+            - Path=/cos/**
+

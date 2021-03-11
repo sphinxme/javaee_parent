@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosx.javase.service.workflow.mapper.MinUserMapper">
+
+    <select id="getMinUserById" resultType="com.dosx.javase.service.workflow.entity.MinUser">
+        select
+            id, name
+        from
+            user
+        where
+            id=#{id}
+    </select>
+
+    <select id="getMinUserByProId" resultType="com.dosx.javase.service.workflow.entity.MinUser">
+        select
+            u.id as id,
+            u.name as name
+        from
+            user as u
+            join workflow_project_to_user p2u on u.id = p2u.user_id
+        where
+            p2u.project_id = #{projectId}
+    </select>
+
+    <select id="searchMinUsersByName" resultType="com.dosx.javase.service.workflow.entity.MinUser">
+        select
+            id, name
+        from
+            user
+        where
+            user.name like concat(#{name}, '%')
+    </select>
+</mapper>

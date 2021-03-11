@@ -36,7 +36,7 @@ public class AccessFilter implements GlobalFilter, Ordered
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
     {
 
-        String token = exchange.getRequest().getQueryParams().getFirst("access_token");
+        String token = exchange.getRequest().getHeaders().getFirst("access_token");
 
         // 验证token
         if(null == token)

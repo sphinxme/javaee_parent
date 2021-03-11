@@ -1,11 +1,14 @@
 package com.dosx.javase.service.workflow.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,6 +35,9 @@ public class Issue implements Serializable {
     @ApiModelProperty(value = "Issue ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    @ApiModelProperty(value = "Issue Name")
+    private String name;
 
     @ApiModelProperty(value = "指向下一个Issue的ID")
     private Long nextId;
@@ -64,5 +70,10 @@ public class Issue implements Serializable {
     @TableLogic
     private Boolean isDeleted;
 
+    @TableField(exist = false)
+    private String description;
+
+    @TableField(exist = false)
+    private List<MinUser> manager;
 
 }

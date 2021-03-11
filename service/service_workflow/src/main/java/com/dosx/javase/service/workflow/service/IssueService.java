@@ -2,8 +2,13 @@ package com.dosx.javase.service.workflow.service;
 
 import com.dosx.javase.service.workflow.entity.Issue;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dosx.javase.service.workflow.entity.vo.EntireIssue;
+import com.dosx.javase.service.workflow.entity.vo.MinIssue;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IssueService extends IService<Issue> {
 
+    List<EntireIssue> getEntireIssuesByProId(Long projectId);
+
+    EntireIssue getEntireIssueByIssueId(Long id);
+
+    List<MinIssue> getMinIssuesByProId(Long projectId);
+
+    List<MinIssue> getMinIssuesByUserId(Long userId);
+
+    List<MinIssue> getMinIssuesByUserIdAndDate(Long userId, Date date);
+
+    void saveSingleIssue(Issue issue);
 }

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosx.javase.service.workflow.mapper.ProjectMapper">
+
+    <resultMap id="EntireProject" type="com.dosx.javase.service.workflow.entity.vo.EntireProject">
+        <id column="id" property="id"/>
+
+        <result column="name" property="name"/>
+        <result column="description" property="desc"/>
+        <result column="img_path" property="imgPath"/>
+
+        <!--    manager   -->
+        <result column="manager_id" property="manager.id"/>
+        <result column="manager_name" property="manager.name"/>
+
+        <association
+                property="progress"
+                select="getProjectProgress"
+                column="id"
+        />
+
+        <collection
+            property="participants"
+            column="id"
+            select="com.dosx.javase.service.workflow.mapper.MinUserMapper.getMinUserByProId"
+        />
+        <collection
+            property="tags"
+            column="id"
+            select="com.dosx.javase.service.workflow.mapper.TagMapper.getTagsByProId"
+        />
+
+
+    </resultMap>
+    
+    <resultMap id="MinProject" type="com.dosx.javase.service.workflow.entity.vo.MinProject">
+        <id column="id" property="id"/>
+
+        <result column="name" property="name"/>
+
+        <!--    manager   -->
+        <result column="manager_id" property="manager.id"/>
+        <result column="manager_name" property="manager.name"/>
+
+        <association
+                property="progress"
+                select="getProjectProgress"
+                column="id"
+        />
+
+        <collection
+                property="tags"
+                column="id"
+                select="com.dosx.javase.service.workflow.mapper.TagMapper.getTagsByProId"
+        />
+
+    </resultMap>
+    
+    <select id="getEntireProject" resultMap="EntireProject">
+        select
+            p.id as id,
+            p.name as name,
+            p.progress as progress,
+            u.id as manager_id,
+            u.name as manager_name,
+            d.description as description
+        from
+            workflow_project AS p
+            JOIN user AS u on u.id = p.master_id
+            JOIN workflow_project_desc AS d ON p.id = d.project_id
+        where p.id=#{id}
+    </select>
+
+    <select id="getAllMinProjects" resultMap="MinProject">
+        select
+            p.id as id,
+            p.name as name,
+            p.progress as progress,
+            u.id as manager_id,
+            u.name as manager_name,
+            p.img_path as img_path
+        from
+            workflow_project AS p
+            JOIN user AS u on u.id = p.master_id
+    </select>
+
+    <select id="getAllMinProjectsByUserId" resultMap="MinProject">
+        select
+            p.id as id,
+            p.name as name,
+            p.progress as progress,
+            u.id as manager_id,
+            u.name as manager_name,
+            p.img_path as img_path
+        from
+            workflow_project AS p
+                JOIN user AS u on u.id = p.master_id
+        where
+            u.id = #{id}
+    </select>
+
+    <select id="getAllMinProjectsByUserIdByTag" resultMap="MinProject">
+        select
+            p.id as id,
+            p.name as name,
+            p.progress as progress,
+            u.id as manager_id,
+            u.name as manager_name,
+            p.img_path as img_path
+        from
+            workflow_project AS p
+                JOIN user AS u on u.id = p.master_id
+        where
+            u.id = #{id}
+    </select>
+
+    <insert id="saveProjectDesc">
+        INSERT INTO workflow_project_desc (project_id, description)
+        VALUES (#{id}, #{desc})
+    </insert>
+
+    <insert id="saveProjectUser">
+        insert into workflow_project_to_user (project_id, user_id)
+        values (#{projectId}, #{userId})
+    </insert>
+
+    <select id="getProjectProgress" resultType="int" >
+        select
+            ifnull(count(if(status, true, null)) / count(status), 0) * 100
+        from
+            workflow_issue
+        where
+            project_id = #{id}
+    </select>
+
+
+</mapper>

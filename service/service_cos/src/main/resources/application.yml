@@ -1,0 +1,22 @@
+# 服务端口
+server:
+  port: 7004
+  tomcat:
+    max-swallow-size: 100MB
+
+# spring
+spring:
+
+  application:
+    name: service-cos
+  profiles:
+    active: dev
+
+  jackson:
+    date-format: yyyy-M-d H:m:s
+    time-zone: GMT+8
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB

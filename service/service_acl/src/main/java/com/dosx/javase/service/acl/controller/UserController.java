@@ -9,6 +9,7 @@ import com.dosx.javase.common.utils.TokenUtil;
 
 import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,8 +91,21 @@ public class UserController {
     @PostMapping("/signup")
     public UniResponse signUp(@RequestBody User user) {
         // todo 注册
+
+        String pwd = user.getPwd();
+        String encryptPwd = PasswordUtil.encryptPwd(pwd);
+        user.setPwd(encryptPwd);
+
+        String name = user.getName();
+        String encoded = Base64Utils.encodeToString(name.getBytes());
+
+
+        userService.save(user);
+
+
         return UniResponse.ok().message("注册成功");
     }
+
 
 
 
