@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosx.javase.service.workflow.mapper.TagMapper">
+
+    <select id="getTagsByProId" resultType="string">
+        select
+            t.tag as tag
+        from
+            workflow_project_to_tag as w2t
+                join workflow_tag t on t.tag = w2t.tag_name
+        where
+            w2t.project_id = #{id}
+    </select>
+
+    <insert id="saveProjectToTag">
+        insert into workflow_project_to_tag (project_id, tag_name)
+        values (#{projectId}, #{tagName})
+    </insert>
+</mapper>
